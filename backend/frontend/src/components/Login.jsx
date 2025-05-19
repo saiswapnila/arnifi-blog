@@ -1,16 +1,18 @@
 import { useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../api"; // Replaces axios
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
+      const res = await api.post("/auth/login", {
         email,
         password,
       });
@@ -20,8 +22,9 @@ const Login = () => {
       localStorage.setItem("username", res.data.user.username);
 
       setMessage("Login successful!");
+      setTimeout(() => navigate("/blogs"), 1000); // Redirect after short delay
     } catch (error) {
-      setMessage("Login failed. Please check your credentials.");
+      setMessage(error.response?.data?.message || "Login failed. Please check your credentials.");
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api"; // adjust path if needed
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -10,7 +10,7 @@ const Blogs = () => {
     const fetchBlogs = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/blogs", {
+        const res = await api.get("/api/blogs", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBlogs(res.data);

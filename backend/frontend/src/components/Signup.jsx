@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../api"; 
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -18,7 +18,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", formData);
+      const res = await api.post("/auth/register", formData); // use shared API
       setMessage("Registration successful!");
     } catch (err) {
       console.error(err);
@@ -64,7 +64,9 @@ function Signup() {
           Register
         </button>
       </form>
-      {message && <p className="mt-4 text-center text-sm text-red-500">{message}</p>}
+      {message && (
+        <p className="mt-4 text-center text-sm text-red-500">{message}</p>
+      )}
     </div>
   );
 }

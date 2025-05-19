@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../api';
 
 const CreateBlog = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
-  const [image, setImage] = useState(null); // changed from string to file
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -27,28 +28,21 @@ const CreateBlog = () => {
     formData.append('content', content);
     formData.append('category', category);
     if (image) {
-      formData.append('image', image); // image file
+      formData.append('image', image);
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/blogs', {
-        method: 'POST',
+      const response = await api.post('/api/blogs', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
-        body: formData,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        alert(data.message || 'Failed to create blog');
-      } else {
-        alert('Blog created successfully!');
-        navigate('/blogs');
-      }
+      alert('Blog created successfully!');
+      navigate('/blogs');
     } catch (error) {
-      alert('Error creating blog: ' + error.message);
+      alert('Error creating blog: ' + (error.response?.data?.message || error.message));
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api";
 import { useNavigate } from "react-router-dom";
 
 const BlogsPage = () => {
@@ -12,12 +12,12 @@ const BlogsPage = () => {
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
-  const loggedInUserId = localStorage.getItem("userId"); // assuming stored on login
+  const loggedInUserId = localStorage.getItem("userId");
 
   const fetchBlogs = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/blogs", {
+      const res = await api.get("/api/blogs", {
         headers: { Authorization: `Bearer ${token}` },
         params: {
           author: selectedAuthor,
@@ -35,7 +35,7 @@ const BlogsPage = () => {
   const fetchFilters = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/blogs", {
+      const res = await api.get("/api/blogs", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -112,14 +112,13 @@ const BlogsPage = () => {
               </p>
               {blog.image && (
                 <img
-                  src={`http://localhost:5000/${blog.image}`}
+                  src={`https://arnifi-blog-dgls.onrender.com/${blog.image}`}
                   alt="Blog"
                   className="w-full max-w-md mt-2"
                 />
               )}
               <p>{blog.content}</p>
 
-              {/* Show Edit button only if logged-in user is the author */}
               {loggedInUserId === blog.author._id && (
                 <button
                   onClick={() => navigate(`/edit-blog/${blog._id}`)}
